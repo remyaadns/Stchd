@@ -1,6 +1,7 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import Ionicons  from '@expo/vector-icons/build/Ionicons';
+// import Ionicons  from '@expo/vector-icons/build/Ionicons';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function TabLayout() {
 
@@ -10,7 +11,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: "#0a7ea4",
         headerShown: false,
       }}>
-      <Tabs.Screen
+      <Tabs.Screen  name="index"
         options={{
           title: 'Home',
           tabBarIcon: ({ color, focused }) => (
