@@ -1,46 +1,50 @@
+///////////////////////////////////////////////////////////////////////////////
 import React from 'react';
-import { SafeAreaView, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { Text } from '@/components/ui/text';
-import { Button,ButtonText } from '@/components/ui/button';
+import { Button, ButtonText } from '@/components/ui/button';
 import { Input, InputField } from '@/components/ui/input';
 import { useLocalSearchParams } from 'expo-router';
 import { supabase } from '@/lib/supabase';
+import Layout from './_layout';
+import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 
 export default () => {
     const [token, setToken] = React.useState('');
-    const  {phone}= useLocalSearchParams();
+    const { phone } = useLocalSearchParams();
 
     const handleVerify = async () => {
         const { data, error } = await supabase.auth.verifyOtp({
-            phone: phone as string , token, type: 'sms'
-        })
+            phone: phone as string,
+            token,
+            type: 'sms'
+        });
         console.log(data, error);
-    }
+    };
 
-  return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
-      <SafeAreaView className="flex-1">
-        <Text className='text-2xl font-bold p-10'>Verify</Text>
-        <ScrollView
-          contentContainerStyle={{ paddingTop: 64, paddingHorizontal: 16, gap: 16 }}
-          keyboardShouldPersistTaps="handled"
-        >
-          <Input variant='outline' size="md" className="w-full">
-            <InputField
-              placeholder="Enter Text here"
-              value={token}
-              onChangeText={setToken}
-              keyboardType="phone-pad"
-            />
-          </Input>
-          <Button onPress={handleVerify} className="w-full bg-black p-5 rounded-lg">
-            <ButtonText>Verify</ButtonText>
-          </Button>
-        </ScrollView>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
-  );
+    return (
+        <Layout onPress={handleVerify} buttonText='Verify'>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={{ flex: 1 }}
+            >
+                <ScrollView
+                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 32 }}
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <Text className='text-2xl font-bold p-10'>Verify</Text>
+                    <Input variant='outline' size="md" className="w-full mb-4">
+                        <InputField
+                            placeholder="Enter OTP"
+                            value={token}
+                            onChangeText={setToken}
+                            keyboardType="number-pad"
+                        />
+                    </Input>
+                </ScrollView>
+            </KeyboardAvoidingView>
+            {/* <Button onPress={handleVerify} className="w-full bg-black p-5 rounded-lg">
+                <ButtonText>Verify</ButtonText>
+            </Button> */}
+        </Layout>
+    );
 }
