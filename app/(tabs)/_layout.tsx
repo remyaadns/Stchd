@@ -38,7 +38,7 @@ export default function TabLayout() {
         }}
         listeners={{
           tabPress: (e) => {
-            console.log(e);
+            e.preventDefault();
             router.push('/post');
           
           },

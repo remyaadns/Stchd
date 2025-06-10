@@ -3,7 +3,7 @@ import React from 'react';
 import { Text } from '@/components/ui/text';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Input, InputField } from '@/components/ui/input';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { supabase } from '@/lib/supabase';
 import Layout from './_layout';
 import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
@@ -17,7 +17,8 @@ export default () => {
             phone: phone as string,
             token,
             type: 'sms'
-        });
+        })
+        router.push("/(auth)/username");
         console.log(data, error);
     };
 

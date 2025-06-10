@@ -9,7 +9,7 @@ import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';
 import { useRouter } from 'expo-router';
 import Layout from './_layout';
-import { VStack } from '@/components/ui/vstack';
+
 
 export default () => {
     // const { user } = useAuth();
