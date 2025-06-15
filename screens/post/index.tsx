@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, TouchableWithoutFeedback, View } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, TouchableWithoutFeedback, View, FlatList  } from 'react-native';
 import ThreadsIcon from '@/assets/icons/threads';
 import { HStack } from '@/components/ui/hstack';
 import { Card } from '@/components/ui/card';
@@ -15,32 +15,60 @@ import { router } from 'expo-router';
 import * as Crypto from 'expo-crypto';
 import { Input, InputField } from '@/components/ui/input';
 import { Divider } from '@/components/ui/divider';
+import PostCard from "./card";
+
+interface Post {
+id: string;
+user_id: string;
+parent_id?: string | null;
+text: string;
+created_at?: string;
+}
+
+
 
 export default () => {
   const { user } = useAuth();
+  
+  const DefaultPost: Post = {
+  id: Crypto.randomUUID(),
+  user_id: user.id,
+  parent_id: null,
+  text: '',
+}
+
+
   const [thread, setThread] =React.useState();
-  const [text, setText] = React.useState();
+  // const [text, setText] = React.useState();
+  const [posts, setPosts] = React.useState<Post[]>([]);
   // const [mainText, setMainText] = useState('');
   const [threadText, setThreadText] = useState('');
   const [showThreadInput, setShowThreadInput] = useState(false);
 
+React.useEffect(() => {
+  setPosts([DefaultPost]);
+}, [])
+
   const onPress = async () => {
-    console.log('pressed');
+    console.log(posts);
     if (!user) return;
 
-    const {data, error} = await supabase.from('Post').insert({
-      id: Crypto.randomUUID(),
-      user_id: user.id,
-      text,
-      // thread_text:null, // Add thread text if exists
-    });
+    const {data, error} = await supabase
+    .from('Post')
+    .insert(posts);
     console.log(data, error);
     if(!error) router.back();
   }
+  
 
   const handleThreadAdd = () => {
     setShowThreadInput(true);
   }
+
+     const updatePost = (id: string, text: string) => {
+    setPosts(posts.map((p: Post) => p.id === id ? {...p, text} : p));
+   }
+
 
   return (
     <SafeAreaView className="flex-1  pt-10">
@@ -66,49 +94,13 @@ export default () => {
             <Divider className='bg-black'/>
             
             <VStack className='flex-1'>
-              {/* Main Thread Input */}
-              <HStack className="items-start px-5">
-                <VStack space='sm' className='items-center'>
-                  <Avatar size="md" className='mt-6'>
-                    <AvatarFallbackText>{user?.username}</AvatarFallbackText>
-                    <AvatarImage
-                      source={{ uri: user?.avatar }}
-                      className="w-12 h-12 rounded-full"
-                    />
-                  </Avatar>
-                  {/* Connecting line */}
-                  <Divider orientation='vertical' className={`${showThreadInput ? 'h-20' : 'h-8'} w-0.5 bg-gray-300`}/>
-                </VStack>
-                
-                <VStack space="md" className="flex-1">
-                  <Card size="md" className="mx-3 bg-transparent">
-                    <VStack className='p-3' space='lg'>
-                      <VStack>
-                        <Heading size="md" className="mb-1 text-black">
-                          {user?.username || "No username"}
-                        </Heading>
-                        <Input size="md" className='border-0'>
-                          <InputField 
-                            placeholder="What's New?"
-                            className='px-0'
-                            value={text}
-                            onChangeText={setText}
-                            multiline
-                          />
-                        </Input>
-                      </VStack>
-                      <HStack className="items-center" space="3xl">
-                        <Images size={24} color="gray" strokeWidth={1.5} />
-                        <Camera size={24} color="gray" strokeWidth={1.5} />
-                        <ImagePlay size={24} color="gray" strokeWidth={1.5} />
-                        <Mic size={24} color="gray" strokeWidth={1.5} />
-                        <Hash size={24} color="gray" strokeWidth={1.5} />
-                        <MapPin size={24} color="gray" strokeWidth={1.5} />
-                      </HStack>
-                    </VStack>
-                  </Card>
-                </VStack>
-              </HStack>
+              {/* Card Start */}
+              <FlatList
+              data={posts}
+              keyExtractor={(item) => item.id}
+              renderItem={({item}) => <PostCard post={item} updatePost={updatePost}/>}
+              />
+                {/* Card End */}
 
               {/* Thread Addition Avatar - Now closer */}
               <HStack className="items-start px-5 -mt-2">
@@ -127,7 +119,8 @@ export default () => {
                     <Button 
                       variant="outline" 
                       className="border-gray-300 bg-transparent rounded-full py-2"
-                      onPress={handleThreadAdd}
+                      // onPress={handleThreadAd}
+                       onPress={() => setPosts([...posts,{...DefaultPost, parent_id: posts[0].id }] )}
                     >
                       <ButtonText className="text-gray-500 text-sm">Add to thread</ButtonText>
                     </Button>

@@ -25,7 +25,11 @@ export default () => {
   }, [pathname]);
 
   const getThreads = async () => {
-    const {data, error} = await supabase.from('Post').select('*, User(*)').order('created_at', {ascending: false});
+    const {data, error} = await supabase
+    .from('Post')
+    .select('*, User(*)')
+    .is('parent_id', null)
+    .order('created_at', {ascending: false});
     console.log(data, error)
     if(!error) setThreads (data);
   }
