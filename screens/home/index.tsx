@@ -1,42 +1,29 @@
 import React from 'react';
-import { FlatList, Pressable, SafeAreaView } from 'react-native';
+import { FlatList, Pressable, SafeAreaView, View, Image } from 'react-native';
 import { useAuth } from '@/providers/AuthProvider';
 import ThreadsIcon from '@/assets/icons/threads';
 import { HStack } from '@/components/ui/hstack';
 import { Card } from '@/components/ui/card';
-import { Avatar, AvatarImage, AvatarFallbackText } from '@/components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallbackText, AvatarBadge } from '@/components/ui/avatar';
 import { Heading } from '@/components/ui/heading';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 import { Images, Camera, ImagePlay, Mic, Hash, MapPin } from 'lucide-react-native';
-import { router, usePathname } from 'expo-router';
+import { router} from 'expo-router';
 import { Divider } from '@/components/ui/divider';
-import { supabase } from '@/lib/supabase';
-
+import { usePosts } from '@/hooks/use-posts';
+import { Plus, Heart, MessageCircle, Repeat, Send } from 'lucide-react-native';
+import {  formatDistanceToNow } from 'date-fns'
 
 export default () => {
   const { user } = useAuth();
   // console.log('user:', user);
-  const [threads, setThreads] = React.useState([]);
-  const pathname = usePathname();
+  const {data, refetch, isLoading } = usePosts();
 
-  React.useEffect (() => {
-    if(pathname === '/') getThreads();
-  }, [pathname]);
-
-  const getThreads = async () => {
-    const {data, error} = await supabase
-    .from('Post')
-    .select('*, User(*)')
-    .is('parent_id', null)
-    .order('created_at', {ascending: false});
-    console.log(data, error)
-    if(!error) setThreads (data);
-  }
 
   return (
     // <SafeAreaView className="flex-1 justify-start items-start pt-10">
-    <SafeAreaView>
+    <SafeAreaView className='bg-white'>
       <HStack className="items-center justify-center pt-10">
         <ThreadsIcon size={40} />
       </HStack>
@@ -70,37 +57,115 @@ export default () => {
               <MapPin size={24} color="gray" strokeWidth={1.5} />
             </HStack>
           </VStack>
+          
         </Card>
+        
       </HStack>
+      </Pressable>
       <Divider/>
       <VStack space='lg'>
        <FlatList
-       data={threads}
+       refreshing={isLoading}
+       onRefresh={refetch}
+       data={data}
        renderItem={({item}) => {
-        return (
-        <HStack className='items-center p-5'>
-           <Avatar size="md" className='mt-6'  >
-          <AvatarFallbackText>{user?.username}</AvatarFallbackText>
-          <AvatarImage
-            source={{
-              uri: user?.avatar,
-            }}
+        // return (
+        //   <Card>
+        // <HStack className='items-center p-5' space='md'>
+        //    <Avatar size="sm" className='mt-6'  >
+        //     <AvatarBadge>
+        //       <Plus size={12} color='white' />
+        //     </AvatarBadge>
+        //   <AvatarFallbackText>{user?.username}</AvatarFallbackText>
+        //   <AvatarImage
+        //     source={{
+        //       uri: user?.avatar,
+        //     }}
+        //   className="w-12 h-12 rounded-full"
+        //   />
+        // </Avatar>
+        // <VStack className='flex-1' space='md'>
+        //   <HStack className='items-center' space='md'>
+        //   <Text size='lg' bold>{item.User.username}</Text>
+        //   {/* <Text size='md'  className='text-gray-500 text-xs mx-5'>{formatDistance(new Date(item.created_at), new Date().getTimezoneOffset(), {addSuffix: true})}</Text> */}
+        //   <Text size='xs'  className='text-gray-500 text-xs mx-5'>{item?.created_at && formatDistanceToNow((new Date(item.created_at) - new Date().getTimezoneOffset()* 60000 ), {addSuffix: true})}</Text>
+        //   </HStack>
+        // <Text size='lg'>{item.text}</Text>
+        // <HStack className='items-center' space='lg'>
+        //   <Heart size={20} color='gray' strokeWidth={1.5} />
+        //   <MessageCircle size={20} color='gray' strokeWidth={1.5} />
+        //   <Repeat  size={20} color='gray' strokeWidth={1.5} />
+        //   <Send  size={20} color='gray' strokeWidth={1.5} />
+        // </HStack>
+        // </VStack>
+        // </HStack>
+        // <Divider className='w-full' style={{marginTop: 20}}/>
+        // </Card>
+        // )
+
+  // the aligning/formating is better here plus I added the image source for rendering   
+       return (
+  <Card>
+    {/* <HStack className='items-start px-5 py-4' space='md'> */}
+    <HStack className="items-center px-5">
+      {/* Avatar Section */}
+      {/* <Avatar size="sm"> */}
+      <Avatar size="sm" className='mt-6'  >
+        <AvatarBadge>
+          <Plus size={8} color='white' />
+        </AvatarBadge>
+        <AvatarFallbackText>{user?.username}</AvatarFallbackText>
+        <AvatarImage
+          source={{
+            uri: user?.avatar,
+          }}
           className="w-12 h-12 rounded-full"
-          />
-        </Avatar>
-        <VStack className='flex-1'>
-          <HStack className='items-center'>
-          <Text size='md' bold>{item.User.username}</Text>
-          <Text size='md' className='text-gray-500 mx-5'>.</Text>
-          <Text size='md'  className='text-gray-500 text-xs'>{new Date(item.created_at).toLocaleDateString()}</Text>
-          </HStack>
-        <Text size='md'>{item.text}</Text>
-        </VStack>
+        />
+      </Avatar>
+
+      {/* Content Section */}
+      <VStack className='flex-1' space='sm'>
+        {/* Header with username and timestamp */}
+        <HStack className='items-center' space='sm'>
+          <Text size='lg' bold>{item.User.username}</Text>
+          <Text size='xs' className='text-gray-500'>
+            {item?.created_at && formatDistanceToNow(
+              (new Date(item.created_at) - new Date().getTimezoneOffset() * 60000), 
+              { addSuffix: true }
+            )}
+          </Text>
         </HStack>
-        )
+
+        {/* Post content */}
+        <Text size='md' className='leading-6'>
+          {item.text}
+               </Text>
+               <View>
+                 <View>
+                   {item?.file && (
+                     <Image
+                       source={{ uri: `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item.user_id}/${item.file}` }}
+                       style={{ width: 100, height: 100, borderRadius: 10 }}
+                     />
+                   )}
+                 </View>
+                 {/* Action buttons */}
+        <HStack className='items-center mt-2' space='lg'>
+          <Heart size={20} color='gray' strokeWidth={1.5} />
+          <MessageCircle size={20} color='gray' strokeWidth={1.5} />
+          <Repeat size={20} color='gray' strokeWidth={1.5} />
+          <Send size={20} color='gray' strokeWidth={1.5} />
+        </HStack>
+         </View>
+      </VStack>
+      
+    </HStack>
+    
+    <Divider className='w-full mt-5' />
+  </Card>
+)
    }}   />
       </VStack>
-        </Pressable>
     </SafeAreaView>
   );
 }

@@ -16,20 +16,10 @@ import * as Crypto from 'expo-crypto';
 import { Input, InputField } from '@/components/ui/input';
 import { Divider } from '@/components/ui/divider';
 import PostCard from "./card";
-
-interface Post {
-id: string;
-user_id: string;
-parent_id?: string | null;
-text: string;
-created_at?: string;
-}
-
-
+import { Post } from '@/lib/types';
 
 export default () => {
   const { user } = useAuth();
-  
   const DefaultPost: Post = {
   id: Crypto.randomUUID(),
   user_id: user.id,
@@ -52,11 +42,12 @@ React.useEffect(() => {
   const onPress = async () => {
     console.log(posts);
     if (!user) return;
+    console.log(posts);
 
     const {data, error} = await supabase
     .from('Post')
     .insert(posts);
-    console.log(data, error);
+    // console.log(data, error);
     if(!error) router.back();
   }
   
@@ -65,8 +56,8 @@ React.useEffect(() => {
     setShowThreadInput(true);
   }
 
-     const updatePost = (id: string, text: string) => {
-    setPosts(posts.map((p: Post) => p.id === id ? {...p, text} : p));
+     const updatePost = (id: string, key: string, value: string ) => {
+    setPosts(posts.map((p: Post) => p.id === id ? { ...p, [key]: value } : p));
    }
 
 

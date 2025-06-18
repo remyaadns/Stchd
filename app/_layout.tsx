@@ -7,6 +7,9 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { AuthProvider } from '@/providers/AuthProvider';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,6 +30,7 @@ export default function RootLayout() {
   }
   return (
     <GluestackUIProvider mode="light">
+      <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Stack initialRouteName='(auth)'>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -35,6 +39,7 @@ export default function RootLayout() {
           <Stack.Screen name="+not-found" />
         </Stack>
       </AuthProvider>
+      </QueryClientProvider>
     </GluestackUIProvider>
   );
 } 
