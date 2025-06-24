@@ -7,6 +7,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { AuthProvider } from '@/providers/AuthProvider';
+import { PostProvider } from '@/providers/PostProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
@@ -32,12 +33,17 @@ export default function RootLayout() {
     <GluestackUIProvider mode="light">
       <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        <PostProvider>
         <Stack initialRouteName='(auth)'>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="post" options={{ headerShown: false, presentation: "modal" }} />
+          <Stack.Screen name="camera" options={{ headerShown: false, presentation: "modal" }} />
+          <Stack.Screen name="gif" options={{ headerShown: false, presentation: "modal" }} />
+          {/* <Stack.Screen name="thread" options={{ headerShown: false }} />    */}
           <Stack.Screen name="+not-found" />
         </Stack>
+        </PostProvider>
       </AuthProvider>
       </QueryClientProvider>
     </GluestackUIProvider>

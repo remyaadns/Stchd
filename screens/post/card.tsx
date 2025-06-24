@@ -12,15 +12,17 @@ import { Post } from '@/lib/types';
 import { Pressable, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { supabase } from '@/lib/supabase';
+import { router } from 'expo-router';
+import { usePost } from '@/providers/PostProvider';
 
 interface PostCardProps {
     post: Post;
-    updatePost: (id: string, key: string, value: string) => void;
 }
 
-export default ({ post, updatePost }: PostCardProps) => {
+export default ({ post }: PostCardProps) => {
     const { user } = useAuth();
-    const [photo, setPhoto] = React.useState();
+    // const [photo, setPhoto] = React.useState('');
+    const { uploadFile, updatePost, photo, setPhoto } = usePost();
     //   const [thread, setThread] =React.useState();
     //   const [text, setText] = React.useState();
     // const [mainText, setMainText] = useState('');
@@ -31,29 +33,31 @@ export default ({ post, updatePost }: PostCardProps) => {
         setShowThreadInput(true);
     }
 
-    const uploadFile = async (uri: string, type: string, name: string) => {
-        let newFormData = new FormData();
-        newFormData.append('file', {
-            uri,
-            name,
-            type,
-        });
-        //    console.log(newFormData);
+    // Moved to the PostProvider can delete 6/19/25
+    // const uploadFile = async (uri: string, type: string, name: string) => {
+    //     let newFormData = new FormData();
+    //     newFormData.append('file', {
+    //         uri,
+    //         name,
+    //         type,
+    //     });
+    //     //    console.log(newFormData);
 
-        const { data, error } = await supabase
-            .storage
-            .from(`files/${user?.id}`)
-            .upload(name, newFormData);
-        console.log(data, error);
-    //         console.log('Upload response data:', data);
-    // console.log('Upload response error:', error);
-    // console.log('data.path would be:', data?.path);
-        if (data) updatePost(post.id, 'file', data.path);
-    //       if (data) updatePost(post.id, 'file', data.fullPath);
-    }
+    //     const { data, error } = await supabase
+    //         .storage
+    //         .from(`files/${user?.id}`)
+    //         .upload(name, newFormData);
+    //     console.log(data, error);
+    // //         console.log('Upload response data:', data);
+    // // console.log('Upload response error:', error);
+    // // console.log('data.path would be:', data?.path);
+    //     if (data) updatePost(post.id, 'file', data.path);
+    // //       if (data) updatePost(post.id, 'file', data.fullPath);
+    // }
 
 
     const addPhoto = async () => {
+        setPhoto('');
         let result = await ImagePicker.launchImageLibraryAsync({
             // mediaTypes: ImagePicker.MediaTypeOptions.Images,
             //   mediaTypes: ImagePicker.MediaType.Images,
@@ -63,11 +67,13 @@ export default ({ post, updatePost }: PostCardProps) => {
             aspect: [4, 3],
             quality: 0.1,
         });
+        if(!result.assets?.[0]?.uri) return;
+
         let uri = result.assets?.[0]?.uri;
         let type = result.assets?.[0]?.mimeType;
         let name = uri?.split('/').pop();
         setPhoto(uri);
-        uploadFile(uri, type, name);
+        uploadFile(post.id, uri, type, name);
     };
 
     return (
@@ -106,8 +112,19 @@ export default ({ post, updatePost }: PostCardProps) => {
                             <Pressable onPress={addPhoto}>
                                 <Images size={24} color="gray" strokeWidth={1.5} />
                             </Pressable>
-                            <Camera size={24} color="gray" strokeWidth={1.5} />
+                            {/* <Pressable onPress={() => router.push('/camera')}> */}
+                             <Pressable onPress={() => {
+                                setPhoto('');
+                                router.push({
+                                pathname:'/camera',
+                                params: { threadId: post.id },
+                                })
+                            }}>
+                            <Camera size={24} color="gray" strokeWidth={1.5} /> 
+                            </Pressable>
+                             <Pressable onPress={() => router.push({ pathname: '/gif', params: { threadId: post.id }})}>
                             <ImagePlay size={24} color="gray" strokeWidth={1.5} />
+                             </Pressable>
                             <Mic size={24} color="gray" strokeWidth={1.5} />
                             <Hash size={24} color="gray" strokeWidth={1.5} />
                             <MapPin size={24} color="gray" strokeWidth={1.5} />

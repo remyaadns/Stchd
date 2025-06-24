@@ -1,64 +1,67 @@
 import React, { useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, TouchableWithoutFeedback, View, FlatList  } from 'react-native';
-import ThreadsIcon from '@/assets/icons/threads';
 import { HStack } from '@/components/ui/hstack';
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallbackText } from '@/components/ui/avatar';
-import { Heading } from '@/components/ui/heading';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 import { Images, Camera, ImagePlay, Mic, Hash, MapPin } from 'lucide-react-native';
 import { useAuth } from '@/providers/AuthProvider';
 import { Button, ButtonText } from '@/components/ui/button';
-import { supabase } from '@/lib/supabase';
-import { router } from 'expo-router';
-import * as Crypto from 'expo-crypto';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Input, InputField } from '@/components/ui/input';
 import { Divider } from '@/components/ui/divider';
 import PostCard from "./card";
-import { Post } from '@/lib/types';
+
+import { usePost } from '@/providers/PostProvider';
 
 export default () => {
+  const { threadId } = useLocalSearchParams();
   const { user } = useAuth();
-  const DefaultPost: Post = {
-  id: Crypto.randomUUID(),
-  user_id: user.id,
-  parent_id: null,
-  text: '',
-}
+  const { posts, updatePost, addThread, uploadPosts, clearPosts} = usePost();
+
+// remove except the add to thread button inputs 6/19/2025
+//   const DefaultPost: Post = {
+//     id: Crypto.randomUUID(),
+//     user_id: user.id,
+//     // parent_id: null,
+//     parent_id: threadId as string ?? null,
+//     text: '',
+//     // file: undefined
+//   }
 
 
-  const [thread, setThread] =React.useState();
-  // const [text, setText] = React.useState();
-  const [posts, setPosts] = React.useState<Post[]>([]);
-  // const [mainText, setMainText] = useState('');
-  const [threadText, setThreadText] = useState('');
+//   const [thread, setThread] =React.useState();
+//   // const [text, setText] = React.useState();
+//   const [posts, setPosts] = React.useState<Post[]>([]);
+//   // const [mainText, setMainText] = useState('');
+//   const [threadText, setThreadText] = useState('');
   const [showThreadInput, setShowThreadInput] = useState(false);
 
-React.useEffect(() => {
-  setPosts([DefaultPost]);
-}, [])
+// React.useEffect(() => {
+//   setPosts([DefaultPost]);
+// }, [])
 
-  const onPress = async () => {
-    console.log(posts);
-    if (!user) return;
-    console.log(posts);
+//   const onPress = async () => {
+//     console.log(posts);
+//     if (!user) return;
+//     console.log(posts);
 
-    const {data, error} = await supabase
-    .from('Post')
-    .insert(posts);
-    // console.log(data, error);
-    if(!error) router.back();
-  }
+//     const {data, error} = await supabase
+//     .from('Post')
+//     .insert(posts);
+//     // console.log(data, error);
+//     if(!error) router.back();
+//   }
   
 
   const handleThreadAdd = () => {
     setShowThreadInput(true);
   }
 
-     const updatePost = (id: string, key: string, value: string ) => {
-    setPosts(posts.map((p: Post) => p.id === id ? { ...p, [key]: value } : p));
-   }
+//      const updatePost = (id: string, key: string, value: string ) => {
+//     setPosts(posts.map((p: Post) => p.id === id ? { ...p, [key]: value } : p));
+//    }
 
 
   return (
@@ -72,7 +75,10 @@ React.useEffect(() => {
           <VStack className="flex-1">
             {/* Header */}
             <HStack className='items-center justify-between p-3'>
-              <Button onPress={() => router.back()} 
+              <Button onPress={() => {
+                router.back();
+                clearPosts();
+              }}
                 size='md' 
                 variant='link' 
                 className='w-14'
@@ -89,7 +95,7 @@ React.useEffect(() => {
               <FlatList
               data={posts}
               keyExtractor={(item) => item.id}
-              renderItem={({item}) => <PostCard post={item} updatePost={updatePost}/>}
+              renderItem={({item}) => <PostCard post={item} />}
               />
                 {/* Card End */}
 
@@ -111,7 +117,7 @@ React.useEffect(() => {
                       variant="outline" 
                       className="border-gray-300 bg-transparent rounded-full py-2"
                       // onPress={handleThreadAd}
-                       onPress={() => setPosts([...posts,{...DefaultPost, parent_id: posts[0].id }] )}
+                       onPress={addThread}
                     >
                       <ButtonText className="text-gray-500 text-sm">Add to thread</ButtonText>
                     </Button>
@@ -147,7 +153,7 @@ React.useEffect(() => {
                 <Text size='sm' className="text-gray-500">Anyone can reply & quote</Text>
                 <Button
                  className="ml-auto rounded-full py-3 px-6"
-              onPress={onPress}
+              onPress={uploadPosts}
                   // disabled={!mainText.trim()}
                 >
                   <ButtonText className="text-white  text-lg">Post</ButtonText>
