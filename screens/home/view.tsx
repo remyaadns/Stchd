@@ -25,8 +25,8 @@ export default ({ item }: { item: Post }) => {
           <SafeAreaView className='bg-white'>
             <ScrollView>
         <Pressable onPress={() => router.push({
-            // pathname: `/thread`,
-                 pathname: `/`,
+            pathname: `/thread`,
+                //  pathname: `/`,
             params: { id: item.id }
         })}>
 

@@ -8,10 +8,10 @@ import { router } from "expo-router";
 
 
 export const PostContext = React.createContext({
-posts: [],    
+posts: [] as Post [],    
 uploadPosts: () => { },
 addThread: () => { },
-updatePost: (id: string, key: string, value: string) => { },
+updatePost: (id: string, key: string, value: string | null ) => { },
 clearPosts: () => {},
 uploadFile: (id: string , uri: string, type: string, name: string) => { },
 setPhoto: (uri: string) => { },
@@ -26,10 +26,12 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
       const DefaultPost: Post = {
         id: Crypto.randomUUID(),
         user_id: user.id,
+        // user_id: null,  use this if bottom doesn't work
         parent_id: null,
         // parent_id: threadId as string ?? null,
         text: '',
-        // file: undefined
+        file: null,
+        place_id: null,
       }
     
     //   const [thread, setThread] =React.useState();
@@ -55,7 +57,7 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
                 name,
                 type,
             });
-            console.log(uri)
+            // console.log(uri)
             //    console.log(newFormData);
     
             const { data, error } = await supabase
@@ -85,6 +87,7 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
                 clearPosts();
                 router.back();
              }
+             if (error) console.error(error);
       }
       
     

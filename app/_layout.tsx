@@ -40,7 +40,8 @@ export default function RootLayout() {
           <Stack.Screen name="post" options={{ headerShown: false, presentation: "modal" }} />
           <Stack.Screen name="camera" options={{ headerShown: false, presentation: "modal" }} />
           <Stack.Screen name="gif" options={{ headerShown: false, presentation: "modal" }} />
-          {/* <Stack.Screen name="thread" options={{ headerShown: false }} />    */}
+          <Stack.Screen name="places" options={{ headerShown: false, presentation: "modal" }} />
+          <Stack.Screen name="thread" options={{ headerShown: false }} />   
           <Stack.Screen name="+not-found" />
         </Stack>
         </PostProvider>

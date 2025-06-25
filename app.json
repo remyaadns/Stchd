@@ -37,6 +37,12 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ],
+        [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to find places near you to share with your friends."
+        }
+      ],
       [
         "expo-splash-screen",
         {
