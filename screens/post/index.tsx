@@ -13,12 +13,13 @@ import { Input, InputField } from '@/components/ui/input';
 import { Divider } from '@/components/ui/divider';
 import PostCard from "./card";
 
+
 import { usePost } from '@/providers/PostProvider';
 
 export default () => {
   const { threadId } = useLocalSearchParams();
   const { user } = useAuth();
-  const { posts, updatePost, addThread, uploadPosts, clearPosts} = usePost();
+  const { posts, addThread, uploadPosts, clearPosts} = usePost();
 
 // remove except the add to thread button inputs 6/19/2025
 //   const DefaultPost: Post = {
@@ -62,6 +63,13 @@ export default () => {
 //      const updatePost = (id: string, key: string, value: string ) => {
 //     setPosts(posts.map((p: Post) => p.id === id ? { ...p, [key]: value } : p));
 //    }
+
+
+
+    // React.useEffect(() => {
+    //     if (!threadId) return;
+    //     updatePost(post.id, 'parent_id', threadId as string);
+    // }, [threadId]);
 
 
   return (

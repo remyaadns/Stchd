@@ -10,7 +10,7 @@ import { VStack } from "@/components/ui/vstack";
 import { Divider } from "@/components/ui/divider";
 import { Avatar, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
 // import { PostView } from "@/components/ui/post"; 
-import { usePosts } from '@/hooks/use-thread';
+import { useThread } from '@/hooks/use-thread';
 
 
 export default function ThreadScreen() {

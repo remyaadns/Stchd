@@ -14,11 +14,19 @@ import { Divider } from '@/components/ui/divider';
 import { usePosts } from '@/hooks/use-posts';
 import { Plus, Heart, MessageCircle, Repeat, Send } from 'lucide-react-native';
 import { formatDistanceToNow } from 'date-fns'
+import PostView from './view';
+// import Audio from '@/screens/post/audio';
+// import { renderText } from '@/screens/post/input';
 
 export default () => {
   const { user } = useAuth();
   // console.log('user:', user);
   const { data, refetch, isLoading } = usePosts();
+  // const fileType = item.file?.split('.').pop();
+
+      // const fileType = item.file?.split('.').pop();
+      // const regex = /([#@]\w+)|([^#@]+)/g;
+      // const textArray = item?.text?.match(regex) || [];
 
 
   return (
@@ -69,6 +77,9 @@ export default () => {
           onRefresh={refetch}
           data={data}
           renderItem={({ item }) => {
+              return  (
+              <PostView item={item} />
+              )
             // return (
             //   <Card>
             // <HStack className='items-center p-5' space='md'>
@@ -107,7 +118,8 @@ export default () => {
             return (
               <Card>
                 {/* <HStack className='items-start px-5 py-4' space='md'> */}
-                <HStack className="items-center px-5">
+                <HStack className="items-start px-5">
+                   <VStack space='sm' className='items-center'>
                   {/* Avatar Section */}
                   {/* <Avatar size="sm"> */}
                   <Avatar size="sm" className='mt-6'  >
@@ -122,6 +134,7 @@ export default () => {
                       className="w-12 h-12 rounded-full"
                     />
                   </Avatar>
+                  </VStack>
 
                   {/* Content Section */}
                   <VStack className='flex-1' space='sm'>
@@ -136,21 +149,40 @@ export default () => {
                           )}
                         </Text>
                       </HStack>
+                      <VStack >
                       {item?.Place?.name && <Text size="xs" bold >{item?.Place?.name}</Text>}
+                      </VStack>
                     </VStack>
 
                     {/* Post content */}
-                    <Text size='md' className='leading-6'>
-                      {item.text}
+                    <Text size='md' className='leading-6' >
+                      {/* {item.text} */}
+                       {/* {renderText(TextArray)} */}
                     </Text>
                     <View>
                       <View>
-                        {item?.file && (
+                        {/* {fileType === 'm4a' ? 
+                        <Audio id={item.id} /> 
+                        : <Image source={{ uri: `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item.user_id}/${item.file}` }}
+                          style={{ width: 100, height: 100, borderRadius: 10 }} /> } */}
+
+                        {/* use this one below */}
+                        {/* {item?.file && (
                           <Image
                             source={{ uri: `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item.user_id}/${item.file}` }}
-                            style={{ width: 100, height: 100, borderRadius: 10 }}
+                            // style={{ width: 100, height: 100, borderRadius: 10 }}
+                            //  className="w-2/3 h-40 rounded-lg mt-2"
+                             className="w-full aspect-square rounded-lg"
+                             style={{ width: 350, height: 350 }}
                           />
-                        )}
+                        )} */}
+                        {/* {item?.file && fileType === 'm4a' && <Audio id={item.id} uri={item?.file} />}
+                        {item?.file && fileType === 'm4a' &&  <Image
+                            source={{ uri: `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item.user_id}/${item.file}` }}
+                            style={{ width: 100, height: 100, borderRadius: 10 }} />} */}
+
+                                 {/* {item?.file && fileType === 'm4a' && <Audio id={item.id} uri={item?.file} />}
+                                {item?.file && fileType !== 'm4a' && <Image source={{uri: imageUrl}} style={{ width: 100, height: 100, borderRadius: 10 }} />} */}
                       </View>
                       {/* Action buttons */}
                       <HStack className='items-center mt-2' space='lg'>
@@ -170,5 +202,6 @@ export default () => {
           }} />
       </VStack>
     </SafeAreaView>
+        
   );
 }

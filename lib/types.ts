@@ -24,11 +24,18 @@ file?: String | null;
 created_at?: string;
 User?: User;
 Post?: Post [];
+tag_name?: string | null;
 }
 
 export interface Place {
     id: string;
+    place_id: string;
     name: string;
     latitude: number;
     longitude: number;
+    address: string;
+}
+
+export interface Tag {
+    name: string;
 }

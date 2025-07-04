@@ -10,11 +10,22 @@ export const getThread = async (id: string) => {
     if(!error) return data;
 }
 
-export const usePosts = (id: string) => {
+// original file, trying to use the query key to get the thread by id under this code
+// export const useThread = (id: string) => {
+//     const {data, isLoading, error, refetch} = useQuery ({
+//         queryKey: ["thread"],
+//         queryFn: () => getThread(id),
+//     })
+
+//     return {data, isLoading, error, refetch};
+// }
+
+export const useThread = (id: string) => {
     const {data, isLoading, error, refetch} = useQuery ({
-        queryKey: ["thread"],
+        queryKey: ["thread", id], // Include id in query key
         queryFn: () => getThread(id),
+        enabled: !!id, // Only run query if id exists
     })
 
-    return {data, isLoading, error, refetch};
+    return {data: data || [], isLoading, error, refetch}; // Default to empty array
 }

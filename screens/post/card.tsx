@@ -6,23 +6,62 @@ import { Heading } from '@/components/ui/heading';
 import { VStack } from '@/components/ui/vstack';
 import { Images, Camera, ImagePlay, Mic, Hash, MapPin } from 'lucide-react-native';
 import { useAuth } from '@/providers/AuthProvider';
-import { Input, InputField } from '@/components/ui/input';
 import { Divider } from '@/components/ui/divider';
 import { Post } from '@/lib/types';
 import { Pressable, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { supabase } from '@/lib/supabase';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { usePost } from '@/providers/PostProvider';
+// import thread from '@/app/thread';
+import Audio from './audio'
+import Input from './input';
 
 interface PostCardProps {
     post: Post;
 }
 
 export default ({ post }: PostCardProps) => {
+    const { threadId } = useLocalSearchParams();
     const { user } = useAuth();
     // const [photo, setPhoto] = React.useState('');
-    const { uploadFile, updatePost, photo, setPhoto } = usePost();
+    const { uploadFile, updatePost, photo, setPhoto, placeName } = usePost();
+    const [ showAudio, setShowAudio ] = React.useState(false);
+    const regex = /([#@]\w+)|([^#@]+)/g;
+    const textArray = post?.text?.match(regex) || [];
+
+
+        //     React.useEffect(() => {
+            
+        //     let index = textArray?.findIndex(text => text.startsWith('#'));
+        //     if (index !== -1 && index !== textArray?.length - 1) {
+        //         createTag(textArray[index]);
+        //         // setTag(textArray[index]); 
+        //     }
+        //     //let index = textArray?.findIndex((text) => text.startsWith('#') || text.startsWith('@'));
+        // }, [textArray]);
+         React.useEffect(() => {
+            const timeout = setTimeout(() => {
+            const hashtags = textArray?.filter(text => text.startsWith('#')) || [];
+            hashtags.forEach(createTag);
+            }, 3000); // debounce for 300ms
+
+            return () => clearTimeout(timeout);
+        }, [textArray]);
+
+
+        
+        const createTag = async (text: string) => {
+            const { data, error } = await supabase.from('Tag').upsert({
+                name: text,
+                updated_at: new Date(),
+            }).select();
+           if (!error) updatePost(post.id, 'tag_name', data?.[0]?.name);
+            // console.log(data, error);
+            // if (error) return console.error(error);
+            // return data[0];
+        }
+
     //   const [thread, setThread] =React.useState();
     //   const [text, setText] = React.useState();
     // const [mainText, setMainText] = useState('');
@@ -55,6 +94,49 @@ export default ({ post }: PostCardProps) => {
     // //       if (data) updatePost(post.id, 'file', data.fullPath);
     // }
 
+        // React.useEffect(() => {
+            
+        //     let index = textArray?.findIndex(text => text.startsWith('#'));
+        //     if (index !== -1 && index !== textArray?.length - 1) {
+        //         createTag(textArray[index]);
+        //         // setTag(textArray[index]);
+        //     }
+        //     //let index = textArray?.findIndex((text) => text.startsWith('#') || text.startsWith('@'));
+        // }, [textArray]);
+
+
+
+        // remove these 2 its above 
+//         React.useEffect(() => {
+//     // Only process tags when the user stops typing (debounce)
+//     const timeoutId = setTimeout(() => {
+//         let index = textArray?.findIndex(text => text.startsWith('#'));
+//         if (index !== -1 && index !== textArray?.length - 1) {
+//             createTag(textArray[index]);
+//         }
+//     }, 500); // Wait 500ms after user stops typing
+
+//     return () => clearTimeout(timeoutId);
+// }, [textArray]);
+
+        // const createTag = async (text: string) => {
+        //     const { data, error } = await supabase.from('Tag').upsert({
+        //         name: text,
+        //         updated_at: new Date(),
+        //     }).select();
+        //    if (!error) updatePost(post.id, 'tag_name', data?.[0]?.name);
+        //     // console.log(data, error);
+        //     // if (error) return console.error(error);
+        //     // return data[0];
+        // }
+
+    
+        React.useEffect(() => {
+            if (!threadId) return;
+            updatePost(post.id, 'parent_id', threadId as string);
+        }, [threadId]);
+    
+
 
     const addPhoto = async () => {
         setPhoto('');
@@ -64,8 +146,10 @@ export default ({ post }: PostCardProps) => {
             //  mediaTypes: ['images', 'videos'],
              mediaTypes: ['images'],
             allowsEditing: true,
-            aspect: [4, 3],
-            quality: 0.1,
+            // aspect: [4, 3],
+            // quality: 0.1,
+            // aspect: [16, 9],
+            quality: 1,
         });
         if(!result.assets?.[0]?.uri) return;
 
@@ -97,16 +181,19 @@ export default ({ post }: PostCardProps) => {
                             <Heading size="md" className="mb-1 text-black">
                                 {user?.username || "No username"}
                             </Heading>
+                            {/* moved to Post input
                             <Input size="md" className='border-0'>
                                 <InputField
                                     placeholder="What's New?"
                                     className='px-0'
                                     value={post.text}
                                     onChangeText={(text) => updatePost(post.id, 'text', text)}
-                                // multiline
+                                    multiline
                                 />
-                            </Input>
+                            </Input> */}
+                            <Input post={post} updatePost={updatePost} textArray={textArray} />
                             {photo && <Image source={{ uri: photo }} style={{ width: 100, height: 100, borderRadius: 10 }} />}
+                            {showAudio && <Audio id={post.id}/> }
                         </VStack>
                         <HStack className="items-center" space="3xl">
                             <Pressable onPress={addPhoto}>
@@ -125,7 +212,9 @@ export default ({ post }: PostCardProps) => {
                              <Pressable onPress={() => router.push({ pathname: '/gif', params: { threadId: post.id }})}>
                             <ImagePlay size={24} color="gray" strokeWidth={1.5} />
                              </Pressable>
+                             <Pressable onPress={() => setShowAudio(!showAudio)} >
                             <Mic size={24} color="gray" strokeWidth={1.5} />
+                            </Pressable>
                             <Hash size={24} color="gray" strokeWidth={1.5} />
                              <Pressable onPress={() => router.push({ pathname: '/places', params: { threadId: post.id }})}>
                             <MapPin size={24} color="gray" strokeWidth={1.5} />
