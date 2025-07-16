@@ -326,7 +326,10 @@ export default ({ item, refetch }: { item: Post, refetch: () => void }) => {
                                             pathname: '/thread',
                                             params: { id: item.id }
                                         })}>
+                                            <HStack className='items-center'>
                                             <MessageCircle size={20} color='gray' strokeWidth={1.5} />
+                                             {item?.Post?.length > 0 && <Text size='sm' className='p-1' >{item?.Post?.length}</Text>}
+                                            </HStack>
                                         </Pressable>
                                         <Pressable onPress={addRepost}>
                                             <Repeat size={20} color='gray' strokeWidth={1.5} />

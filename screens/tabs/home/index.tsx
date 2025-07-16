@@ -14,14 +14,14 @@ import { Divider } from '@/components/ui/divider';
 import { usePosts } from '@/hooks/use-posts';
 import { Plus, Heart, MessageCircle, Repeat, Send } from 'lucide-react-native';
 import { formatDistanceToNow } from 'date-fns'
-import PostView from './view';
+import PostView from '@/components/shared/post-view';
 // import Audio from '@/screens/post/audio';
 // import { renderText } from '@/screens/post/input';
 
 export default () => {
   const { user } = useAuth();
   // console.log('user:', user);
-  const { data, refetch, isLoading } = usePosts();
+  const { data, refetch, isLoading } = usePosts({ key: 'parent_id', value: null, type: 'is' });
   // const fileType = item.file?.split('.').pop();
     const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${user?.id}/avatar.jpeg`;
 

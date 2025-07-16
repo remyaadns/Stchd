@@ -10,14 +10,16 @@ import { VStack } from "@/components/ui/vstack";
 import { Divider } from "@/components/ui/divider";
 import { Avatar, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
 // import { PostView } from "@/components/ui/post"; 
-import  PostView  from "@/screens/tabs/home/view";
-import { useThread } from '@/hooks/use-thread';
+import  PostView  from "@/components/shared/post-view";
+// import { useThread } from "@/hooks/use-thread";
+import { usePosts } from "@/hooks/use-posts";
 
 
 export default function ThreadScreen() {
     const { user } = useAuth();
     const { id } = useLocalSearchParams();
-    const { data, isLoading, error, refetch } = useThread(id as string);
+    // const { data, isLoading, error, refetch } = useThread(id as string);
+    const { data, refetch, isLoading  } = usePosts({ key: 'id', value: id as string, type: 'eq' });
 
     if (!data) return null;
     return (
