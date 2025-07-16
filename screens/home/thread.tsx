@@ -10,6 +10,7 @@ import { VStack } from "@/components/ui/vstack";
 import { Divider } from "@/components/ui/divider";
 import { Avatar, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
 // import { PostView } from "@/components/ui/post"; 
+import  PostView  from "@/screens/home/view";
 import { useThread } from '@/hooks/use-thread';
 
 
@@ -22,7 +23,7 @@ export default function ThreadScreen() {
     return (
         <SafeAreaView className="bg-white flex-1">
             <HStack className="w-full justify-between items-center p-3">
-                <Button variant="lnk" onPress={() => router.back()}>
+                <Button variant="link" onPress={() => router.back()}>
                     <ChevronLeft size={20} color="black" />
                     <Text className="w-12 text-black">Back</Text>
                 </Button>
