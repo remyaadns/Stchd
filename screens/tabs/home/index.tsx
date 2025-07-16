@@ -23,6 +23,7 @@ export default () => {
   // console.log('user:', user);
   const { data, refetch, isLoading } = usePosts();
   // const fileType = item.file?.split('.').pop();
+    const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${user?.id}/avatar.jpeg`;
 
       // const fileType = item.file?.split('.').pop();
       // const regex = /([#@]\w+)|([^#@]+)/g;
@@ -43,7 +44,7 @@ export default () => {
             <AvatarFallbackText>{user?.username}</AvatarFallbackText>
             <AvatarImage
               source={{
-                uri: user?.avatar,
+                uri: avatarUrl,
               }}
               className="w-12 h-12 rounded-full"
             />

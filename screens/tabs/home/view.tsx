@@ -210,6 +210,7 @@ import * as Crypto from "expo-crypto";
 export default ({ item, refetch }: { item: Post, refetch: () => void }) => {
     const { user } = useAuth();
     const imageUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user_id}/${item?.file}`
+    const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item.user_id}/avatar.jpeg`;
 
     const fileType = item.file?.split('.').pop();
     const regex = /([#@]\w+)|([^#@]+)/g;
@@ -250,10 +251,10 @@ export default ({ item, refetch }: { item: Post, refetch: () => void }) => {
     return (
         <SafeAreaView className='bg-white'>
             <ScrollView>
-                <Pressable onPress={() => router.push({
+                {/* <Pressable onPress={() => router.push({
                     pathname: `/thread`,
                     params: { id: item.id }
-                })}>
+                })}> */}
                     <Card>
                         <HStack className="items-start px-5" space='sm' >
                             <Avatar size="sm" className='mt-6'  >
@@ -264,7 +265,7 @@ export default ({ item, refetch }: { item: Post, refetch: () => void }) => {
                                 <AvatarFallbackText>{item?.user?.username}</AvatarFallbackText>
                                 <AvatarImage
                                     source={{
-                                        uri: item?.user?.avatar,
+                                        uri: avatarUrl,
                                     }}
                                     className="w-12 h-12 rounded-full"
                                 />
@@ -277,12 +278,16 @@ export default ({ item, refetch }: { item: Post, refetch: () => void }) => {
                                         <Repeat size={14} color='black' strokeWidth={2} />
                                           <Text size="sm" className='mx-2'>Reposted By</Text>
                                         <Pressable onPress={() => router.push({
-                                            pathname: `/profile`,
-                                            params: { id: item?.repost_user_id }
+                                            pathname: `/user`,
+                                            params: {  userId: item?.repost_user_id }
                                         })}>
                                             <Text size="sm" bold>{item?.repost_user?.username}</Text>
                                         </Pressable>
                                     </HStack>}
+                                <Pressable onPress={() => router.push({
+                                    pathname: `/user`,
+                                    params: { userId: item?.user_id }
+                                })}> 
                                     <HStack className='items-center' space='md'>
                                         {/* Fixed: Changed from item?.User to item?.user, something is wrong it should be User not user */}
                                         <Text size='lg' bold>{item?.User?.username}</Text> 
@@ -292,6 +297,7 @@ export default ({ item, refetch }: { item: Post, refetch: () => void }) => {
                                             )}
                                         </Text>
                                     </HStack>
+                                    </Pressable>
                                     <VStack >
                                         {/* Fixed: Changed from item?.Place to item?.place */}
                                         {item?.Place?.name && <Text size="xs" bold >{item?.Place?.name}</Text>}
@@ -334,7 +340,7 @@ export default ({ item, refetch }: { item: Post, refetch: () => void }) => {
                         </HStack>
                         <Divider className='w-full mt-5' />
                     </Card>
-                </Pressable>
+                {/* </Pressable> */}
             </ScrollView>
         </SafeAreaView>
     )

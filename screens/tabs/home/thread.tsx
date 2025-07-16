@@ -10,7 +10,7 @@ import { VStack } from "@/components/ui/vstack";
 import { Divider } from "@/components/ui/divider";
 import { Avatar, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
 // import { PostView } from "@/components/ui/post"; 
-import  PostView  from "@/screens/home/view";
+import  PostView  from "@/screens/tabs/home/view";
 import { useThread } from '@/hooks/use-thread';
 
 
