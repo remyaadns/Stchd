@@ -83,10 +83,11 @@ export default () => {
           <VStack className="flex-1">
             {/* Header */}
             <HStack className='items-center justify-between p-3'>
-              <Button onPress={() => {
+              {/* <Button onPress={() => {
                 router.back();
                 clearPosts();
-              }}
+              }} */}
+               <Button onPress={() => router.back()}
                 size='md' 
                 variant='link' 
                 className='w-14'
