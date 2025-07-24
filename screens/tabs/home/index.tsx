@@ -167,6 +167,7 @@ export default () => {
           data={data}
           refreshing={isLoading}
           onRefresh={refetch}
+          showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <Divider />}
           renderItem={({ item }) => (
             <PostView 
@@ -176,7 +177,7 @@ export default () => {
             />
           )}
           keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={false}
+          // showsVerticalScrollIndicator={false}
         />
       </VStack>
     </SafeAreaView>

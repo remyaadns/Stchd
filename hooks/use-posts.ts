@@ -77,7 +77,9 @@ export const getPosts = async ({ filters }: PostsProps) => {
         repost_user: repost_user_id(*), 
         posts: Post(*, user: user_id(*)),
         parent: parent_id(*, user: user_id(*))
+
         `);
+                // parent: parent_id(*, user: User!user_id(*))
     // .is('parent_id', null)
     filters.forEach((filter) => {
         query = query.filter(filter.key, filter.type, filter.value);

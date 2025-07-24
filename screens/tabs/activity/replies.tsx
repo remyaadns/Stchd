@@ -7,6 +7,7 @@ import { Divider } from '@/components/ui/divider';
 import PostView from '@/components/shared/post-view';
 
 
+
 export default () => {
     const { user } = useAuth();
     const { data, refetch, isLoading } = usePosts({

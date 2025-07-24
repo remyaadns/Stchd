@@ -500,7 +500,7 @@ import { FlatList } from 'react-native';
 import { Divider } from '@/components/ui/divider';
 import PostView from '@/components/shared/post-view';
 import BottomSheet from '@/components/shared/bottom-sheet'
-import { useFollowers } from '@/hooks/use_followers';
+import { useFollowers } from '@/hooks/use-followers';
 
 enum Tab {
   THREADS = 'Threads',

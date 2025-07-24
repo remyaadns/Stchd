@@ -8,6 +8,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { usePost } from '@/providers/PostProvider';
 import { router, useLocalSearchParams } from 'expo-router';
 import * as Crypto from 'expo-crypto'
+// import { useAuth } from '@/providers/AuthProvider';
 
 
 export default () => {
@@ -26,6 +27,32 @@ export default () => {
         router.back();
 
     }
+
+
+/// improved version requires a uploadfile from '@/lib/upload'
+// export default () => {
+//     const { user: authUser }= useAuth();
+//     const { threadId } = useLocalSearchParams();
+//     const [search, setSearch] = React.useState('');
+//     const debouncedSearch = useDebounce(search, 500);
+//     const { data, isLoading, error, refetch } = useGifs(debouncedSearch);
+//     // console.log(debouncedSearch);
+//     const { setPhoto, updatePost } = usePost();
+
+
+//     const handleUpload = async (url: string) => {
+//         const name = `${Crypto.randomUUID()}.gif`;
+//         const {data, error } = await uploadFile({
+//         userId: authUser?.id || '',
+//         uri: url,
+//         type: 'image/gif',
+//         name
+//     });
+
+//      if (!error) uploadPost (threadId as string, 'file', data?.path);
+//      setPhoto(url);
+//      router.back();
+// }
 
     return (
         <SafeAreaView className='flex-1 pt-10'>

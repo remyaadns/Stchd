@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaView, FlatList } from 'react-native';
 import { Text } from '@/components/ui/text';
-import { useFollowers } from '@/hooks/use_followers';
+import { useFollowers } from '@/hooks/use-followers';
 import { useAuth } from '@/providers/AuthProvider';
 import { HStack } from '@/components/ui/hstack';
 import { Avatar, AvatarFallbackText, AvatarImage } from '@/components/ui/avatar';

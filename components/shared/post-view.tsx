@@ -832,7 +832,7 @@ export default ({ item, refetch, showDivider = false }: PostViewProps ) => {
                             </Avatar>
                         </Pressable>
                         
-                        {/* Follow button */}
+                        {/* Follow button  need this below to wrok new post*/}
                         {!following?.includes(item?.user_id) && user?.id !== item?.user_id && (
                             <View 
                                 className='absolute -bottom-1 -right-1 items-center justify-center'
@@ -907,11 +907,13 @@ export default ({ item, refetch, showDivider = false }: PostViewProps ) => {
                         </HStack>
 
                         {/* Location - Updated to use new data structure */}
-                        {item?.place?.name && (
+                        {item?.place && 
+                            <Pressable onPress= { () => router.push( { pathname: '/posts', params: {placeId: item.place_id } })}>
                             <Text size="sm" className='text-gray-600 -mt-1'>
                                 📍 {item?.place?.name}
                             </Text>
-                        )}
+                            </Pressable>
+                        }
 
                         {/* Post content */}
                         <VStack space='md'>

@@ -6,7 +6,8 @@ import { VStack } from '@/components/ui/vstack';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useLocalSearchParams } from 'expo-router';
 import { router } from 'expo-router';
-import { usePlaces } from '@/hooks/use-places';
+// import { usePlaces } from '@/hooks/use-places';
+import { useLocations } from '@/hooks/use-locations';
 import * as Location from 'expo-location';
 import { Place } from '@/lib/types';
 import { supabase } from '@/lib/supabase';
@@ -22,7 +23,7 @@ export default () => {
         latitude: 0,
         longitude: 0
     });
-    const { data, isLoading, error } = usePlaces(debouncedSearch, location);
+    const { data, isLoading, error } = useLocations(debouncedSearch, location);
     const { updatePost } = usePost();
     // console.log(data);
 
