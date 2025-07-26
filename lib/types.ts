@@ -2,6 +2,13 @@ export interface User {
     id: string;
     username: string;
     avatar: string;
+    // bio?: string | null;
+    // email?: string | null;
+    // location?: string | null;
+    // created_at?: string;
+    // updated_at?: string;
+    // followers_count?: number;
+    // following_count?: number;
 }
 
 
@@ -25,6 +32,7 @@ created_at?: string;
 User?: User;
 Post?: Post [];
 tag_name?: string | null;
+mention_user_id?: string | null;
 }
 
 export interface Place {

@@ -47,6 +47,7 @@ export default () => {
                     const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user?.id}/avatar.jpeg`;
                     return (
                         <HStack space='md' className='items-center'>
+                            <HStack space='sm' >
                             <Avatar size="md" className='mt-6'>
                                 <AvatarFallbackText>{item?.user?.username}</AvatarFallbackText>
                                 <AvatarImage
@@ -67,6 +68,7 @@ export default () => {
                                 </HStack>
                                 <Text size='sm'>Follows you</Text>
                             </VStack>
+                            </HStack>
                             {/* <Button onPress={() => {setSelectedTab(item)}} size='md' variant={selectedTab === item ? 'solid' : 'outline'} action='primary' className='rounded-lg'> */}
                             { followingData?.includes(item?.user?.id) ? (
                              <Button onPress={() => unfollowUser(item.user.id)} size='md' variant='outline' action='primary' className='rounded-lg'>

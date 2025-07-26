@@ -12,8 +12,6 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Input, InputField } from '@/components/ui/input';
 import { Divider } from '@/components/ui/divider';
 import PostCard from "./card";
-
-
 import { usePost } from '@/providers/PostProvider';
 
 export default () => {

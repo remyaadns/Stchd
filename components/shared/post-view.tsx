@@ -919,7 +919,7 @@ export default ({ item, refetch, showDivider = false }: PostViewProps ) => {
                         <VStack space='md'>
                             {/* Text content */}
                             <Text size='md' className='leading-5 text-black'>
-                                {renderText(textArray)}
+                                {renderText({ textArray, post: item})}
                             </Text>
 
                             {/* Image */}

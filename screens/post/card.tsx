@@ -4,11 +4,11 @@ import { Card } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallbackText } from '@/components/ui/avatar';
 import { Heading } from '@/components/ui/heading';
 import { VStack } from '@/components/ui/vstack';
-import { Images, Camera, ImagePlay, Mic, Hash, MapPin } from 'lucide-react-native';
+import { Images, Camera, ImagePlay, Mic, Hash, MapPin, AtSign } from 'lucide-react-native';
 import { useAuth } from '@/providers/AuthProvider';
 import { Divider } from '@/components/ui/divider';
 import { Post } from '@/lib/types';
-import { Pressable, Image } from 'react-native';
+import { Pressable, Image, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { supabase } from '@/lib/supabase';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -16,6 +16,7 @@ import { usePost } from '@/providers/PostProvider';
 // import thread from '@/app/thread';
 import Audio from './audio'
 import Input from './input';
+import UserModal from '@/components/shared/user-modal';
 
 interface PostCardProps {
     post: Post;
@@ -24,11 +25,13 @@ interface PostCardProps {
 export default ({ post }: PostCardProps) => {
     const { threadId } = useLocalSearchParams();
     const { user } = useAuth();
+    //const { user: authUser } = useAuth();
     // const [photo, setPhoto] = React.useState('');
     const { uploadFile, updatePost, photo, setPhoto, placeName } = usePost();
     const [ showAudio, setShowAudio ] = React.useState(false);
     const regex = /([#@]\w+)|([^#@]+)/g;
     const textArray = post?.text?.match(regex) || [];
+    // const [ contentHeight, setContentHeight ] = React.useState(0);
 
 
         //     React.useEffect(() => {
@@ -181,6 +184,7 @@ export default ({ post }: PostCardProps) => {
                             <Heading size="md" className="mb-1 text-black">
                                 {user?.username || "No username"}
                             </Heading>
+                            {placeName && <Text style={{ fontSize: 12, fontWeight: 'bold' }}>{placeName} </Text>}
                             {/* moved to Post input
                             <Input size="md" className='border-0'>
                                 <InputField
@@ -191,6 +195,7 @@ export default ({ post }: PostCardProps) => {
                                     multiline
                                 />
                             </Input> */}
+                            {/* <Input post={post} updatePost={updatePost} textArray={textArray} setContentHeight={setContentHeight} /> */}
                             <Input post={post} updatePost={updatePost} textArray={textArray} />
                             {photo && <Image source={{ uri: photo }} style={{ width: 100, height: 100, borderRadius: 10 }} />}
                             {showAudio && <Audio id={post.id}/> }
@@ -215,7 +220,10 @@ export default ({ post }: PostCardProps) => {
                              <Pressable onPress={() => setShowAudio(!showAudio)} >
                             <Mic size={24} color="gray" strokeWidth={1.5} />
                             </Pressable>
-                            <Hash size={24} color="gray" strokeWidth={1.5} />
+                            <UserModal post={post} updatePost={updatePost}/>
+                            {/* <Pressable onPress={() => setShowActionsheet(true)}>
+                            <AtSign size={24} color="gray" strokeWidth={1.5} />
+                            </Pressable> */}
                              <Pressable onPress={() => router.push({ pathname: '/places', params: { threadId: post.id }})}>
                             <MapPin size={24} color="gray" strokeWidth={1.5} />
                              </Pressable>
