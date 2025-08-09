@@ -567,10 +567,11 @@ return (
         
         {/* Bottom divider */}
         <View 
-            className='ml-16' 
+            // className='ml-16' 
             style={{ 
                 height: 1, 
-                backgroundColor: '#C2C3C4', // Could make this theme-aware too
+                backgroundColor: '#4B5563',
+                // borderColor: 'var(--theme-mode) === "dark" ? "#4B5563" : "#D1D5DB"',
                 marginTop: 12 
             }} 
         />
