@@ -8,7 +8,7 @@ export const getTags = async () => {
 }
 
 export const searchTags = async (search: string) => {
-    const {data, error} = await supabase.from('Tag').select('*').ilike('name', `%${search}&`).order('created_at', { ascending: false})
+    const {data, error} = await supabase.from('Tag').select('*').ilike('name', `%${search}%`).order('created_at', { ascending: false})
 
     if (!error) return data;
 }
