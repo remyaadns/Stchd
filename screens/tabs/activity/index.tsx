@@ -25,24 +25,40 @@ export default () => {
     }
   }
   return (
-       <SafeAreaView className="pt-10">
-        <VStack space='md'>
-      <Text size="3xl" bold className='text-black px-2'> Activity </Text>
-      <FlatList 
-      horizontal
-      data= {tabs}
-      contentContainerClassName='gap-2 p-2'
-      showsHorizontalScrollIndicator={false}
-      renderItem= {({ item }) => {
-        return (
-        <Button onPress={() => setSelectedTab(item)} size='md' variant={selectedTab === item ? 'solid' : 'outline'} action='primary' className='rounded-lg'>
-          <ButtonText>{item}</ButtonText>
-        </Button>
-  )
-      }}
-    />
-    </VStack>
-    {_renderTab(selectedTab)}
+    <SafeAreaView className="pt-10 bg-white dark:bg-black">
+      <VStack space="md">
+        <Text size="3xl" bold className="text-black dark:text-white px-2">
+          Activity
+        </Text>
+        
+        <FlatList
+          horizontal
+          data={tabs}
+          contentContainerStyle={{ gap: 8, padding: 8 }}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item }) => {
+            return (
+              <Button
+                onPress={() => setSelectedTab(item)}
+                size="md"
+                variant={selectedTab === item ? 'solid' : 'outline'}
+                action="primary"
+                className={`rounded-lg ${
+                  selectedTab === item 
+                    ? 'bg-gray-600 text-white dark:bg-gray-500 dark:text-black' 
+                    : 'bg-transparent border-gray-300 dark:border-gray-600'
+                }`}
+              >
+                <ButtonText className={`${selectedTab === item ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`}>
+                  {item}
+                </ButtonText>
+              </Button>
+            );
+          }}
+        />
+
+      </VStack>
+      {_renderTab(selectedTab)}
     </SafeAreaView>
   );
 }

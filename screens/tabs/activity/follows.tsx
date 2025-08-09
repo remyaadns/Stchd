@@ -41,48 +41,63 @@ export default () => {
             <FlatList
                 horizontal
                 data={data}
-                contentContainerClassName='gap-2 p-2'
+                contentContainerStyle={{ gap: 8, padding: 8 }}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => {
                     const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user?.id}/avatar.jpeg`;
                     return (
                         <HStack space='md' className='items-center'>
-                            <HStack space='sm' >
-                            <Avatar size="md" className='mt-6'>
-                                <AvatarFallbackText>{item?.user?.username}</AvatarFallbackText>
-                                <AvatarImage
-                                    source={{
-                                        uri: avatarUrl,
-                                    }}
-                                    className="w-12 h-12 rounded-full"
-                                />
-                            </Avatar>
-                            <VStack>
-                                <HStack space='sm' className='items-center'>
-                                    <Text size='lg' bold>{item?.user?.username}</Text>
-                                    <Text size='xs'>
-                                        {item?.created_at &&
-                                            formatDistanceToNow(
-                                                new Date(new Date(item?.created_at).getTime() - new Date().getTimezoneOffset() * 60000),
-                                                { addSuffix: true })}</Text>
-                                </HStack>
-                                <Text size='sm'>Follows you</Text>
-                            </VStack>
+                            <HStack space='sm'>
+                                <Avatar size="md" className='mt-6'>
+                                    <AvatarFallbackText>{item?.user?.username}</AvatarFallbackText>
+                                    <AvatarImage
+                                        source={{
+                                            uri: avatarUrl,
+                                        }}
+                                        className="w-12 h-12 rounded-full"
+                                    />
+                                </Avatar>
+                                <VStack>
+                                    <HStack space='sm' className='items-center'>
+                                        <Text size='lg' bold>{item?.user?.username}</Text>
+                                        <Text size='xs'>
+                                            {item?.created_at &&
+                                                formatDistanceToNow(
+                                                    new Date(new Date(item?.created_at).getTime() - new Date().getTimezoneOffset() * 60000),
+                                                    { addSuffix: true })}</Text>
+                                    </HStack>
+                                    <Text size='sm'>Follows you</Text>
+                                </VStack>
                             </HStack>
-                            {/* <Button onPress={() => {setSelectedTab(item)}} size='md' variant={selectedTab === item ? 'solid' : 'outline'} action='primary' className='rounded-lg'> */}
-                            { followingData?.includes(item?.user?.id) ? (
-                             <Button onPress={() => unfollowUser(item.user.id)} size='md' variant='outline' action='primary' className='rounded-lg'>
-                                <ButtonText>UnFollow</ButtonText>
-                            </Button>
-                            ) :(
-                                        <Button onPress={() => followUser(item.user.id)} size='md' variant='solid' action='primary' className='rounded-lg'>
-                                <ButtonText>Follow back</ButtonText>
-                            </Button>
-                            )}
+
+                            {/* Follow/Unfollow Button */}
+                            <HStack>
+                                {followingData?.includes(item?.user?.id) ? (
+                                    <Button
+                                        onPress={() => unfollowUser(item.user.id)}
+                                        size="md"
+                                        variant="outline"
+                                        action="primary"
+                                        className="rounded-lg border-gray-500 text-gray-500 dark:border-gray-300 dark:text-gray-300"
+                                    >
+                                        <ButtonText>UnFollow</ButtonText>
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        onPress={() => followUser(item.user.id)}
+                                        size="md"
+                                        variant="solid"
+                                        action="primary"
+                                        className="rounded-lg bg-gray-500 text-white dark:bg-gray-300 dark:text-white"
+                                    >
+                                        <ButtonText>Follow back</ButtonText>
+                                    </Button>
+                                )}
+                            </HStack>
                         </HStack>
-                    )
+                    );
                 }}
             />
         </SafeAreaView>
     );
-}
+};
