@@ -17,6 +17,7 @@ import { usePost } from '@/providers/PostProvider';
 import Audio from './audio'
 import Input from './input';
 import UserModal from '@/components/shared/user-modal';
+import { A } from '@expo/html-elements';
 
 interface PostCardProps {
     post: Post;
@@ -32,6 +33,7 @@ export default ({ post }: PostCardProps) => {
     const regex = /([#@]\w+)|([^#@]+)/g;
     const textArray = post?.text?.match(regex) || [];
     // const [ contentHeight, setContentHeight ] = React.useState(0);
+    const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${user?.id}/avatar.jpeg`;
 
 
         //     React.useEffect(() => {
@@ -169,7 +171,7 @@ export default ({ post }: PostCardProps) => {
                 <Avatar size="md" className='mt-6'>
                     <AvatarFallbackText>{user?.username}</AvatarFallbackText>
                     <AvatarImage
-                        source={{ uri: user?.avatar }}
+                        source={{ uri: user?.avatarUrl || avatarUrl }}
                         className="w-12 h-12 rounded-full"
                     />
                 </Avatar>
