@@ -2,8 +2,8 @@ export interface User {
     id: string;
     username: string;
     avatar: string;
-    // bio?: string | null;
-    // email?: string | null;
+    bio?: string | null;
+    email?: string | null;
     // location?: string | null;
     // created_at?: string;
     // updated_at?: string;
@@ -11,28 +11,17 @@ export interface User {
     // following_count?: number;
 }
 
-
-// export interface Post {
-// file: any;
-// id: string;
-// user_id: string;
-// parent_id?: string | null;
-// text: string;
-// created_at?: string;
-// User?: User;
-// Post?: Post [];
-// }
 export interface Post {
-id: string;
-user_id: string;
-parent_id?: string | null;
-text: string;
-file?: String | null;
-created_at?: string;
-User?: User;
-Post?: Post [];
-tag_name?: string | null;
-mention_user_id?: string | null;
+    id: string;
+    user_id: string;
+    parent_id?: string | null;
+    text: string;
+    file?: String | null;
+    created_at?: string;
+    User?: User;
+    Post?: Post[];
+    tag_name?: string | null;
+    mention_user_id?: string | null;
 }
 
 export interface Place {
