@@ -22,7 +22,7 @@ export const getUsers = async () => {
 
 
 export const searchUsers = async (search: string) => {
-    const {data, error} = await supabase.from('User').select().ilike('username', `%${search}&`).order('created_at', { ascending: false})
+    const {data, error} = await supabase.from('User').select().ilike('username', `%${search}%`).order('created_at', { ascending: false})
   if (!error) return data;
 }
 
