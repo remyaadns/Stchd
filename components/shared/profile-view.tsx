@@ -341,9 +341,9 @@
 //     aspect: [4, 3],
 //     quality: 0.1,
 //   });
-  
+
 //   if (!result.assets?.[0]?.uri) return null;
-  
+
 //   return {
 //     uri: result.assets[0].uri,
 //     type: result.assets[0].mimeType,
@@ -355,7 +355,7 @@
 //   const { uploadFile } = usePost();
 //   const [tab, setTab] = React.useState<typeof Tabs[number]>(Tabs[0]);
 //   const [showActionsheet, setShowActionsheet] = React.useState(false);
-  
+
 //   // Call hooks with safe values, even if user is undefined
 //   const { data, isLoading, refetch } = usePosts({ 
 //     key: tab.key, 
@@ -428,7 +428,7 @@
 //             </AvatarGroup>
 //           )}
 //         </VStack>
-        
+
 //         <Pressable onPress={isOwner ? addPhoto : () => { }}>
 //           <Avatar size="md" className='mt-6'>
 //             <AvatarFallbackText>{user?.username || 'U'}</AvatarFallbackText>
@@ -465,7 +465,7 @@
 //           </Button>
 //         ))}
 //       </HStack>
-      
+
 //       <VStack space='lg'>
 //         <FlatList
 //           data={data || []}
@@ -475,7 +475,7 @@
 //           renderItem={({ item }) => <PostView item={item} refetch={refetch} />}
 //         />
 //       </VStack>
-      
+
 //       <BottomSheet showActionSheet={showActionsheet} setShowActionSheet={setShowActionsheet} />
 //     </SafeAreaView>
 //   );
@@ -501,6 +501,7 @@ import { Divider } from '@/components/ui/divider';
 import PostView from '@/components/shared/post-view';
 import BottomSheet from '@/components/shared/bottom-sheet'
 import { useFollowers } from '@/hooks/use-followers';
+import { Settings } from 'lucide-react-native';
 
 enum Tab {
   THREADS = 'Threads',
@@ -531,9 +532,9 @@ const pickImage = async () => {
     aspect: [4, 3],
     quality: 0.1,
   });
-  
+
   if (!result.assets?.[0]?.uri) return null;
-  
+
   return {
     uri: result.assets[0].uri,
     type: result.assets[0].mimeType,
@@ -545,9 +546,9 @@ export default ({ user }: { user: User }) => {
   const { uploadFile } = usePost();
   const [tab, setTab] = React.useState<typeof Tabs[number]>(Tabs[0]);
   const [showActionsheet, setShowActionsheet] = React.useState(false);
-  
+
   // Updated to use filters array format
-  const { data, isLoading, refetch } = usePosts({ 
+  const { data, isLoading, refetch } = usePosts({
     filters: [
       {
         key: tab.key,
@@ -588,84 +589,181 @@ export default ({ user }: { user: User }) => {
     });
   };
 
+  // return (
+  //   <SafeAreaView className="flex-1 pt-10 px-5">
+  //     <HStack className='items-center justify-between p-3'>
+  //       <VStack>
+  //         <Text size='3xl' bold className='text-black mt-6' >{user?.username || 'Unknown User'}</Text>
+  //         {user?.bio ? (
+  //           <Text className='text-gray-700 mt-1'>{user.bio}</Text>
+  //         ) : null}
+  //         {followers && followers.length > 0 && (
+  //           <AvatarGroup>
+  //             {followers.slice(0, 3).map((item, index) => {
+  //               const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user?.id}/avatar.jpeg`;
+  //               return (
+  //                 <Avatar
+  //                   key={index}
+  //                   size="md"
+  //                   className={"border-2 border-outline-0 "}
+  //                 >
+  //                   <AvatarFallbackText className="text-white">
+  //                     {item?.user?.username || 'U'}
+  //                   </AvatarFallbackText>
+  //                   <AvatarImage
+  //                     source={{
+  //                       uri: avatarUrl
+  //                     }}
+  //                     className="w-24 h-24 rounded-full"
+  //                   />
+  //                 </Avatar>
+  //               );
+  //             })}
+  //             {followers.length > 3 && (
+  //               <Avatar size="sm">
+  //                 <AvatarFallbackText>{"+ " + (followers.length - 3)}</AvatarFallbackText>
+  //               </Avatar>
+  //             )}
+  //           </AvatarGroup>
+  //             )}
+  //            {user?.email && (
+  //           <Text className="text-gray-500 mt-2">{user.email}</Text>
+  //         )}
+  //       </VStack>
+
+  //       <Pressable onPress={isOwner ? addPhoto : () => { }}>
+  //         <Avatar size="md" className='mt-6'>
+  //           <AvatarFallbackText>{user?.username || 'U'}</AvatarFallbackText>
+  //           <AvatarImage
+  //             source={{
+  //               uri: avatarUrl,
+  //             }}
+  //             className="w-12 h-12 rounded-full"
+  //           />
+  //         </Avatar>
+  //       </Pressable>
+  //     </HStack>
+
+  //     {isOwner && (
+  //       <HStack space='md' className='items-center justify-between p-5 pt-10'>
+  //         <Button onPress={() => setShowActionsheet(true)} variant='outline' size='md' className="flex-1 border-gray-400 p-2 rounded-lg">
+  //           <ButtonText>Edit profile</ButtonText>
+  //         </Button>
+  //         <Button onPress={shareProfile} variant='outline' size='md' className="flex-1 border-gray-400 p-2 rounded-lg">
+  //           <ButtonText>Share profile</ButtonText>
+  //         </Button>
+  //       </HStack>
+  //     )}
+
+  //     <HStack className='items-center justify-between p-3'>
+  //       {Tabs.map((t) => (
+  //         <Button
+  //           key={t.name}
+  //           onPress={() => setTab(t)}
+  //           variant='link'
+  //           className={`flex-1 border-b ${t.name === tab.name ? 'border-black' : 'border-gray-400'}`}
+  //         >
+  //           <ButtonText className={`${t.name === tab.name ? 'text-black' : 'text-gray-500'}`}>{t.name}</ButtonText>
+  //         </Button>
+  //       ))}
+  //     </HStack>
+
+  //     <VStack space='lg'>
+  //       <FlatList
+  //         data={data || []}
+  //         refreshing={isLoading}
+  //         onRefresh={refetch}
+  //         ItemSeparatorComponent={() => <Divider />}
+  //         renderItem={({ item }) => <PostView item={item} refetch={refetch} />}
+  //       />
+  //     </VStack>
+
+  //     <BottomSheet showActionSheet={showActionsheet} setShowActionSheet={setShowActionsheet} />
+  //   </SafeAreaView>
+
   return (
-    <SafeAreaView className="flex-1 pt-10 px-5">
-      <HStack className='items-center justify-between p-3'>
+    <SafeAreaView className="flex-1 pt-10 bg-white dark:bg-black">
+      <HStack className="items-center justify-between p-3">
         <VStack>
-          <Text size='3xl' bold className='text-black mt-6' >{user?.username || 'Unknown User'}</Text>
-          {followers && followers.length > 0 && (
-            <AvatarGroup>
-              {followers.slice(0, 3).map((item, index) => {
-                const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${item?.user?.id}/avatar.jpeg`;
-                return (
-                  <Avatar
-                    key={index}
-                    size="md"
-                    className={"border-2 border-outline-0 "}
-                  >
-                    <AvatarFallbackText className="text-white">
-                      {item?.user?.username || 'U'}
-                    </AvatarFallbackText>
-                    <AvatarImage
-                      source={{
-                        uri: avatarUrl
-                      }}
-                    />
-                  </Avatar>
-                );
-              })}
-              {followers.length > 3 && (
-                <Avatar size="sm">
-                  <AvatarFallbackText>{"+ " + (followers.length - 3)}</AvatarFallbackText>
-                </Avatar>
-              )}
-            </AvatarGroup>
+          <Text size="3xl" bold className="text-black dark:text-white mt-2">
+            {user?.username || "Unknown User"}
+          </Text>
+          {user?.bio ? (
+            <Text className="text-gray-700 dark:text-gray-300 mt-1">{user.bio}</Text>
+          ) : null}
+          {user?.email && (
+            <Text className="text-gray-500 dark:text-gray-400 mt-1">{user.email}</Text>
           )}
         </VStack>
-        
         <Pressable onPress={isOwner ? addPhoto : () => { }}>
-          <Avatar size="md" className='mt-6'>
-            <AvatarFallbackText>{user?.username || 'U'}</AvatarFallbackText>
-            <AvatarImage
-              source={{
-                uri: avatarUrl,
+          <Avatar size="lg">
+            <AvatarBadge
+              size="lg"
+              style={{ 
+                backgroundColor: "black", 
+                alignItems: "center", 
+                justifyContent: "center" 
               }}
-              className="w-12 h-12 rounded-full"
-            />
+            >
+              <Plus size={8} color="white" strokeWidth={5} />
+            </AvatarBadge>
+            <AvatarFallbackText>{user?.username}</AvatarFallbackText>
+            <AvatarImage source={{ uri: avatarUrl }} className="w-20 h-20 rounded-full" />
           </Avatar>
         </Pressable>
       </HStack>
 
       {isOwner && (
-        <HStack space='md' className='items-center justify-between p-5 pt-10'>
-          <Button onPress={() => setShowActionsheet(true)} variant='outline' size='md' className="flex-1 border-gray-400 p-2 rounded-lg">
-            <ButtonText>Edit profile</ButtonText>
+        <HStack space="md" className="items-center justify-between px-5 mt-6">
+          <Button
+            onPress={() => setShowActionsheet(true)}
+            variant="outline"
+            className="flex-1 border-gray-400 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800"
+          >
+            <Text bold className="text-center text-black dark:text-white">
+              Edit profile
+            </Text>
           </Button>
-          <Button onPress={shareProfile} variant='outline' size='md' className="flex-1 border-gray-400 p-2 rounded-lg">
-            <ButtonText>Share profile</ButtonText>
+          <Button
+            onPress={shareProfile}
+            variant="outline"
+            className="flex-1 border-gray-400 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800"
+          >
+            <Text bold className="text-center text-black dark:text-white">
+              Share profile
+            </Text>
           </Button>
         </HStack>
       )}
 
-      <HStack className='items-center justify-between p-3'>
+      <HStack className="items-center justify-between p-3">
         {Tabs.map((t) => (
           <Button
             key={t.name}
             onPress={() => setTab(t)}
-            variant='link'
-            className={`flex-1 border-b ${t.name === tab.name ? 'border-black' : 'border-gray-400'}`}
+            variant="link"
+            className={`flex-1 border-b ${
+              t.name === tab.name 
+                ? "border-black dark:border-white" 
+                : "border-gray-400 dark:border-gray-600"
+            }`}
           >
-            <ButtonText className={`${t.name === tab.name ? 'text-black' : 'text-gray-500'}`}>{t.name}</ButtonText>
+            <ButtonText className={`${
+              t.name === tab.name 
+                ? "text-black dark:text-white" 
+                : "text-gray-500 dark:text-gray-400"
+            }`}>
+              {t.name}
+            </ButtonText>
           </Button>
         ))}
       </HStack>
       
-      <VStack space='lg'>
+      <VStack space="lg">
         <FlatList
-          data={data || []}
+          data={data}
           refreshing={isLoading}
           onRefresh={refetch}
-          ItemSeparatorComponent={() => <Divider />}
           renderItem={({ item }) => <PostView item={item} refetch={refetch} />}
         />
       </VStack>
