@@ -81,7 +81,7 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
         //         console.log('Upload response data:', data);
         // console.log('Upload response error:', error);
         // console.log('data.path would be:', data?.path);
-            // if (data) updatePost(id, 'file', data.path); bring this back if you want to use path
+            if (data) updatePost(id, 'file', data.path);
             return data?.path;
         //       if (data) updatePost(post.id, 'file', data.fullPath);
         }
