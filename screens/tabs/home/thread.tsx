@@ -214,6 +214,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { FlatList, Pressable, SafeAreaView, View, ScrollView, StatusBar } from "react-native";
 import { useAuth } from "@/providers/AuthProvider";
 import { ChevronLeft, MessageCircle } from "lucide-react-native";
+import { useColorScheme } from 'react-native';
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Divider } from "@/components/ui/divider";
@@ -224,6 +225,7 @@ import { usePosts } from "@/hooks/use-posts";
 export default function ThreadScreen() {
     const { user } = useAuth();
     const { id } = useLocalSearchParams();
+    const colorScheme = useColorScheme(); 
     
     // Updated to use the new filters array format
     const filters = [
@@ -247,34 +249,41 @@ export default function ThreadScreen() {
     const replies = mainPost?.posts || [];
     const avatarUrl = `${process.env.EXPO_PUBLIC_BUCKET_URL}/${user?.id}/avatar.jpeg`;
 
-    return (
-        <SafeAreaView className="flex-1 pt-2">
-            <StatusBar barStyle="dark-content" backgroundColor="white" />
-            
+   return (
+        <SafeAreaView className="flex-1 pt-10 bg-white dark:bg-black">
+            {/* Status Bar */}
+            <StatusBar 
+                barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} 
+                backgroundColor={colorScheme === 'dark' ? '#000' : '#fff'} 
+            />
+
             {/* Header */}
             <View 
                 className="flex-row justify-between items-center px-4 py-3"
                 style={{ 
                     borderBottomWidth: 1, 
-                    borderBottomColor: '#f3f4f6' 
+                    borderBottomColor: '#f3f4f6'
                 }}
             >
-                <Pressable 
-                    onPress={() => router.back()}
-                    className="flex-row items-center"
-                    style={{ 
-                        paddingVertical: 8, 
-                        paddingHorizontal: 8,
-                        marginLeft: -8 
-                    }}
-                >
-                    <ChevronLeft size={24} color="#000" strokeWidth={2} />
-                </Pressable>
+               <Pressable
+                   onPress={() => router.back()}
+                   className="flex-row items-center"
+                   style={{
+                       paddingVertical: 8,
+                       paddingHorizontal: 8,
+                       marginLeft: -8,
+                       backgroundColor: colorScheme === 'dark' ? '#333' : '#fff', 
+                       borderRadius: 999, 
+                   }}
+               >
+                   <ChevronLeft size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} strokeWidth={2} />
+               </Pressable>
                 
-                <Text className="text-lg font-bold text-black">Thread</Text>
+                <Text className="text-lg font-bold text-black dark:text-white">Thread</Text>
                 <View style={{ width: 40 }} />
             </View>
 
+            {/* FlatList for Posts */}
             <FlatList
                 data={[{ type: 'main', data: mainPost }, ...replies.map(reply => ({ type: 'reply', data: reply }))]}
                 showsVerticalScrollIndicator={false}
@@ -287,8 +296,8 @@ export default function ThreadScreen() {
                                 
                                 {/* Replies Header */}
                                 {replies.length > 0 && (
-                                    <View className="px-4 py-3 bg-gray-50">
-                                        <Text size="md" bold className="text-black">
+                                    <View className="px-4 py-3 bg-gray-50 dark:bg-gray-900">
+                                        <Text size="md" bold className="text-black dark:text-white">
                                             {replies.length} {replies.length === 1 ? 'Reply' : 'Replies'}
                                         </Text>
                                     </View>
@@ -313,11 +322,7 @@ export default function ThreadScreen() {
                                     threadId: mainPost?.id
                                 }
                             })}
-                            className="px-4 py-4 bg-white"
-                            style={{
-                                borderTopWidth: 1,
-                                borderTopColor: '#f3f4f6'
-                            }}
+                            className="px-4 py-4 bg-white dark:bg-black border-t border-gray-100 dark:border-gray-800"
                         >
                             <HStack className="items-center" space="md">
                                 <Avatar size="sm">
@@ -330,7 +335,7 @@ export default function ThreadScreen() {
                                 </Avatar>
                                 
                                 <View className="flex-1">
-                                    <Text className="text-gray-500 text-base">
+                                    <Text className="text-gray-500 dark:text-gray-400 text-base">
                                         Reply to {mainPost?.User?.username || mainPost?.user?.username}...
                                     </Text>
                                 </View>
@@ -339,7 +344,6 @@ export default function ThreadScreen() {
                             </HStack>
                         </Pressable>
                         
-                        {/* Bottom padding for safe area */}
                         <View style={{ height: 20 }} />
                     </View>
                 )}
