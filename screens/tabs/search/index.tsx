@@ -26,9 +26,9 @@ export default () => {
     }
   }
   return (
-       <SafeAreaView className="pt-10">
+       <SafeAreaView className="pt-10 bg-white dark:bg-black">
         <VStack space='xl' className='p-2'>
-      <Text size="3xl" bold className='text-black'> Search </Text>
+      <Text size="3xl" bold className='text-black dark:text-white'> Search </Text>
 
       <Input variant='rounded' size='lg'>
         <InputSlot className='pl-3'>
@@ -49,7 +49,8 @@ export default () => {
       showsHorizontalScrollIndicator={false}
       renderItem= {({ item }) => {
         return (
-        <Button onPress={() => setSelectedTab(item)} size='md' variant={selectedTab === item ? 'solid' : 'outline'} action='primary' className='rounded-lg'>
+        <Button onPress={() => setSelectedTab(item)} size='md' variant={selectedTab === item ? 'solid' : 'outline'} action='primary' className={`rounded-lg ${selectedTab === item ? 'bg-gray-500 text-white dark:bg-gray-300 dark:text-white' : 'border-gray-500 text-gray-500 dark:border-gray-300 dark:text-gray-300'}`}
+              >
           <ButtonText>{item}</ButtonText>
         </Button>
   )
